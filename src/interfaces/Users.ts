@@ -11,10 +11,3 @@ export interface User {
     createdAt: Date,
     updatedAt: Date
 }
-
-export interface NewUser extends Omit<User, 'id' | 'createdAt' | 'updatedAt'> {}
-
-export interface SearchUser {
-    location: Location,
-    eventType: EventType
-}
