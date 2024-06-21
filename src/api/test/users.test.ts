@@ -1,12 +1,23 @@
-import request from 'supertest';
+import request from 'supertest'
 
-import app from '../../app';
+import app from '../../app'
 
 import * as userService from '../../services/users.service'
-import { NewUser } from '../../interfaces/Users';
+import { NewUser } from '../../interfaces/Users'
+
+import * as middlewares from '../../middlewares'
+import { IGetUserAuthInfoRequest } from '../../interfaces/Auth'
+import { NextFunction } from 'express'
+
 
 // Mock the getUsers service function
 jest.spyOn(userService, 'getUsers').mockImplementation(async () => userService.users);
+
+// mock the middleware for authentication
+(middlewares.authenticateJWT as jest.Mock) = jest.fn().mockImplementation(() => (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+    req.userAccount = { id: 1, username: 'testuser' }; // Mock user data
+    next();
+});
 
 describe('POST /api/v1/users/register', () => {
     it('registers new user and returns a json message with the user', async () => {
